@@ -4,6 +4,7 @@ import csv
 import random
 import time
 import pandas
+import crayons
 
 #File path, goal for this is to pull from github, then we take the raw .csv file and read it via pandas
 url = 'https://raw.githubusercontent.com/UMSMASTA/UMSMASTA/main/Actors.csv'
@@ -40,7 +41,6 @@ def main(username):
 
     random_actor = random.choice(csv_dict_list)
    
-    #game_startup()
     
 #for loop to take selected actor name and make a wheel of fortune-esque blank space.
     blanks = ['_' if char.isalpha() else ' ' for char in random_actor['Name']]
@@ -57,6 +57,12 @@ def main(username):
     #list to keep track of used movies 
     used_movies = []
 
+    #list to show random letters 
+    unrevealed_letters = []
+    for i, char in enumerate(actor_answer):
+        if blanks[i] == '_':
+            unrevealed_letters.append(i)
+
 #While loop for the guessing
     while attempt > 0:
 
@@ -67,26 +73,25 @@ def main(username):
         print("\n------------------------------------")
         print("Movie hint #" , movie_hint_counter, random_movie)
         guess = str(input("Type your guess: ").lower())
-
         
-        correct_guess = False
-        #we run a for loop for both the word and the individual characters of a users guess
-        for i, char in enumerate(actor_answer):
-            #if the character is in the answer, it will be revealed
-            if char in guess:
-                blanks[i] = char
-                correct_guess = True
-        
-
-
         print(' '.join(blanks))
+
         if guess == actor_answer:
             print(actor_answer.title())
             print("You have guessed the correct actor! Well done", username + '!')
             break
+
         else:
             attempt = attempt - 1
-            print(f"You have {attempt} attempts remaining..\n")
+            print(f"\nYou have {attempt} attempts remaining..\n")
+            if unrevealed_letters:
+                random_unrevealed_index = random.choice(unrevealed_letters)
+                blanks[random_unrevealed_index] = actor_answer[random_unrevealed_index]
+                unrevealed_letters.remove(random_unrevealed_index)  # Remove the revealed index
+                print("Here's a hint: " + ' '.join(blanks))
+            else:
+                print("No more letters to reveal!")
+            
  
 
 
