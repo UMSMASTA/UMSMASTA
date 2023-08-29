@@ -75,16 +75,22 @@ def main(username):
         guess = str(input("Type your guess: ").lower())
         
         print(' '.join(blanks))
-
+        #win condition, with a loop to play again
         if guess == actor_answer:
             print(actor_answer.title())
             print("You have guessed the correct actor! Well done", username + '!')
-            break
-
+            time.sleep(1)
+            play_again = input("\nWould you like to try again? (Y/N): ")
+            if play_again.lower() == "y":
+                main(username)
+            else:
+                break
+        #oount down attempts
         else:
             attempt = attempt - 1
             print(f"\nYou have {attempt} attempts remaining..\n")
             if unrevealed_letters:
+                #variable to assign a random letter to show as a hint
                 random_unrevealed_index = random.choice(unrevealed_letters)
                 blanks[random_unrevealed_index] = actor_answer[random_unrevealed_index]
                 unrevealed_letters.remove(random_unrevealed_index)  # Remove the revealed index
@@ -98,16 +104,14 @@ def main(username):
 
         if attempt == 0:
             print('You have run out of attempts! The correct actor was: ', actor_answer.title())
+            play_again = input("\nWould you like to try again? (Y/N): ")
+            if play_again.lower() == "y":
+                main(username)
+            else:
+                break
 
 username = game_startup()
 main(username)
 
-
-#Things to do:
-
-#take out hypens in answers
-#Add some colors, borders maybe
-#just overall tidy up
-#increase database to add actresses
 
 
